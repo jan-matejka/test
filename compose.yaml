@@ -1,0 +1,6 @@
+x-podman:
+  in_pod: False
+
+include:
+  - container/base-debian/compose.yaml
+  - container/base-debian-testing/compose.yaml
