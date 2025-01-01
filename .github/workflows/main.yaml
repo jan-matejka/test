@@ -1,4 +1,4 @@
-name: message-queue CI
+name: GHA Testing
 
 on: push
 
