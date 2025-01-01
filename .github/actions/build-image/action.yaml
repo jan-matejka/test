@@ -4,9 +4,6 @@ inputs:
   image:
     required: true
     description: image name to build with podman-compose
-  dir:
-    required: true
-    description: directory to call podman-compose in
   repository:
     description: git repository name
     default: test
@@ -59,7 +56,7 @@ runs:
       if: inputs.base != ''
       env:
         BASE: >-
-          ${{ inputs.registry }}/${{ inputs.repository }}_${{ inputs.dir }}_${{ inputs.base }}:${{ github.sha }}
+          ${{ inputs.registry }}/${{ inputs.repository }}_${{ inputs.base }}:${{ github.sha }}
       run: >
         podman pull ${{ env.BASE }}
       shell: sh
@@ -67,13 +64,13 @@ runs:
     - name: Build image
       env:
         IMAGE_FULL: >-
-          ${{ inputs.repository }}_${{ inputs.dir }}_${{ inputs.image }}
+          ${{ inputs.repository }}_${{ inputs.image }}
         CACHE: >-
-          ${{ inputs.registry }}/${{ inputs.repository }}_${{ inputs.dir }}_${{ inputs.image }}
+          ${{ inputs.registry }}/${{ inputs.repository }}_${{ inputs.image }}
       run: >
         set -x && cd message-queue &&
         podman-compose
-        -p ${{ inputs.repository }}_${{ inputs.dir }}
+        -p ${{ inputs.repository }}
         --podman-build-args "-t ${{ env.IMAGE_FULL }}:${{ github.sha }}
         --cache-from=${{ env.CACHE }}
         --cache-to=${{ env.CACHE }}"
@@ -87,7 +84,7 @@ runs:
       uses: redhat-actions/push-to-registry@v2
       env:
         IMAGE_FULL: >
-          ${{ inputs.repository }}_${{ inputs.dir }}_${{ inputs.image }}
+          ${{ inputs.repository }}_${{ inputs.image }}
       with:
         image: ${{ env.IMAGE_FULL }}
         tags: ${{ github.sha }}
