@@ -1,0 +1,23 @@
+name: GHA Testing - Common Workflow
+
+on: push
+
+concurrency:
+  # Automatically cancel workflows if newer workflow started for the same
+  # branch
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-base-debian:
+    if: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: "./.github/actions/build-image"
+        with:
+          image: base-debian
+          registry: ghcr.io/${{ github.repository_owner }}
+          registry_user: ${{ github.actor }}
+          registry_pass: ${{ secrets.GITHUB_TOKEN }}
+
