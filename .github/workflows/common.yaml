@@ -7,13 +7,7 @@ on:
         required: true
         type: string
 
-
-
-concurrency:
-  # Automatically cancel workflows if newer workflow started for the same
-  # branch
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.job_id }}
-  cancel-in-progress: false
+# No concurrency. Having it here causes deadlocks in GHA.
 
 jobs:
   build-base-debian:
