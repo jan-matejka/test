@@ -14,7 +14,8 @@ concurrency:
   # calling workflow so it causes a deadlock as main workflow needs called
   # workflow but called workflow can't run due to shared concurrency group.
   group: common-${{ github.ref }}-
-  cancel-in-progress: true
+  # Can't use cancel in progress as that cancels the entire calling workflow
+  cancel-in-progress: false
 
 jobs:
   build-base-debian:
