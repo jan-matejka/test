@@ -1,4 +1,4 @@
 FROM docker.io/library/debian:trixie-slim
 # Base debian testing image
 
-RUN echo "base-debian-testing" >> ~/mark
+RUN echo "base-debian-testing" >> /mark
