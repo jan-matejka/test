@@ -7,7 +7,14 @@ on:
         required: true
         type: string
 
-# No concurrency. Having it here causes deadlocks in GHA.
+concurrency:
+  # Automatically cancel workflows if newer workflow started for the same
+  # branch
+  # Can't have ${{ github.workflow }} here as that is inherited from the
+  # calling workflow so it causes a deadlock as main workflow needs called
+  # workflow but called workflow can't run due to shared concurrency group.
+  group: common-${{ github.ref }}-
+  cancel-in-progress: true
 
 jobs:
   build-base-debian:
