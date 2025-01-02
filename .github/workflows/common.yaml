@@ -14,7 +14,10 @@ concurrency:
   # calling workflow so it causes a deadlock as main workflow needs called
   # workflow but called workflow can't run due to shared concurrency group.
   group: common-${{ github.ref }}-
-  # Can't use cancel in progress as that cancels the entire calling workflow
+  # Can't use cancel in progress as that cancels the entire calling workflow.
+  # But at least this will linearize the common workflow so only the first one
+  # actually builds and the rest will use caches.
+  # It will increase the total runtime by those wait times but might be worth.
   cancel-in-progress: false
 
 jobs:

@@ -3,4 +3,3 @@ services:
     build:
       context: container/base-runtime-2
       dockerfile: Containerfile
-
