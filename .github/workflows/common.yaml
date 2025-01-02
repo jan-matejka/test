@@ -1,11 +1,16 @@
 name: GHA Testing - Common Workflow
 
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      job_id:
+        required: true
+        type: string
 
 concurrency:
   # Automatically cancel workflows if newer workflow started for the same
   # branch
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.job_id }}
   cancel-in-progress: false
 
 jobs:

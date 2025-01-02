@@ -11,6 +11,8 @@ concurrency:
 jobs:
   common:
     uses: ./.github/workflows/common.yaml
+    with:
+      job_id: ${{ github.job }}
     secrets: inherit
 
   build-base-runtime-1:
