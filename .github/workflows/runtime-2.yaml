@@ -1,6 +1,9 @@
 name: GHA Testing - Runtime 2
 
-on: push
+on:
+  push:
+    paths:
+      - container/base-runtime-1/**
 
 concurrency:
   # Automatically cancel workflows if newer workflow started for the same
