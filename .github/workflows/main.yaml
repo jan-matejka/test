@@ -72,7 +72,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - run: grep runtime-1 ~/mark
+      - run: grep runtime-1 /mark
 
   test-runtime-2:
     if: true
@@ -85,4 +85,4 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - run: grep runtime-2 ~/mark
+      - run: grep runtime-2 /mark
