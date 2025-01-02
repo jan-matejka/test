@@ -1,8 +1,6 @@
 name: GHA Testing - Runtime 2
 
-on:
-  workflow_run:
-    workflows: [GHA Testing - Common Workflow]
+on: push
 
 concurrency:
   # Automatically cancel workflows if newer workflow started for the same
@@ -11,11 +9,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  common:
+    uses: ./.github/workflows/common.yaml
+    secrets: inherit
+
   build-base-runtime-2:
-    if: true && github.event.workflow_run.conclusion == 'success'
+    if: true
     runs-on: ubuntu-latest
     needs:
-      - build-base-debian
+      - common
     steps:
       - uses: actions/checkout@v4
       - uses: "./.github/actions/build-image"
@@ -26,7 +28,7 @@ jobs:
           registry_pass: ${{ secrets.GITHUB_TOKEN }}
 
   test-runtime-2:
-    if: true && github.event.workflow_run.conclusion == 'success'
+    if: true
     runs-on: ubuntu-latest
     needs:
       - build-base-runtime-2

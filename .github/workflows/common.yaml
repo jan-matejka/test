@@ -1,6 +1,6 @@
 name: GHA Testing - Common Workflow
 
-on: push
+on: workflow_call
 
 concurrency:
   # Automatically cancel workflows if newer workflow started for the same
