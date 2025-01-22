@@ -21,8 +21,8 @@ jobs:
       #
       # However, then we would'be wasting checkouts just to determine there is
       # no change and set the tag.
-      base-debian-tag: ${{ steps.base-debian-tag.outputs.tag }}
-      base-debian: ${{ steps.base-debian.outputs.any_changed }}
+      base-debian-tag: ${{ steps.base-debian.outputs.tag }}
+      base-debian: ${{ steps.base-debian.outputs.changed }}
       runtime-1: true
     steps:
       # TBD: check if $ref_name exists in registry, otheriwse build.
@@ -36,29 +36,10 @@ jobs:
           echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
 
       - id: base-debian
-        uses: tj-actions/changed-files@v35
+        uses: "./.github/actions/detect"
         with:
-          files: |
-            container/base-debian/**
-
-      - name: Show base-debian changed files
-        env:
-          changed: ${{ steps.base-debian.outputs.all_changed_files }}
-        # TBD: this can easily go out of argv limits
-        run: printf "%s\n" $changed
-        shell: sh
-
-      - id: base-debian-tag
-        env:
-          sha: ${{ github.sha }}
-          any_changed: ${{ steps.base-debian.outputs.any_changed }}
-        run: |
-          printf "tag=" >> "${GITHUB_OUTPUT}"
-          ${any_changed} && {
-            echo "$sha" >> "${GITHUB_OUTPUT}"
-          } || {
-            echo "$branch_tag" >> "${GITHUB_OUTPUT}"
-          }
+          branch_tag: ${{ needs.analyze.outputs.branch_tag }}
+          paths: containers/base-debian/**
 
   build-base-debian:
     runs-on: ubuntu-latest
