@@ -42,3 +42,4 @@ runs:
         } || {
           echo "$branch_tag" >> "${GITHUB_OUTPUT}"
         }
+      shell: sh
