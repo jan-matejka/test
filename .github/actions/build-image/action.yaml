@@ -24,6 +24,9 @@ inputs:
   base_tag:
     description: base image tag
     required: true
+  branch_tag:
+    description: branch tag
+    required: true
 
 runs:
   using: "composite"
@@ -62,7 +65,7 @@ runs:
         -p ${{ inputs.repository }}
         --podman-build-args "
         -t ${{ env.IMAGE_FULL }}:${{ github.sha }}
-        -t ${{ env.IMAGE_FULL }}:${{ github.ref }}
+        -t ${{ env.IMAGE_FULL }}:${{ inputs.branch_tag }}
         --cache-from=${{ env.CACHE }}
         --cache-to=${{ env.CACHE }}"
         build --build-arg tag=${{ inputs.base_tag }}
@@ -78,7 +81,7 @@ runs:
           ${{ inputs.repository }}_${{ inputs.image }}
       with:
         image: ${{ env.IMAGE_FULL }}
-        tags: ${{ github.sha }} ${{ github.ref }}
+        tags: ${{ github.sha }} ${{ inputs.branch_tag }}
         registry: ${{ inputs.registry }}
         username: ${{ inputs.registry_user }}
         password: ${{ inputs.registry_pass }}
