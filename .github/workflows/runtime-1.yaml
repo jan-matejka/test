@@ -8,12 +8,6 @@ on:
         type: string
 
 jobs:
-  info:
-    runs-on: ubuntu-latest
-    steps:
-      - name: foo
-        run: echo ${{ github.workflow }} /// ${{ github.ref }}
-
   build-base-runtime-1:
     if: true
     runs-on: ubuntu-latest
