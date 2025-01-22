@@ -1,4 +1,6 @@
-FROM ghcr.io/linuxcontainers/debian-slim:12
+ARG registry=localhost
+ARG tag=latest
+FROM ${registry}/test_base-debian:${tag}
 # Base debian image
 
 RUN echo "base-runtime-1" >> /mark
