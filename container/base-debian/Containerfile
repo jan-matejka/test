@@ -4,3 +4,4 @@ FROM ${registry}/test_base-debian:${tag}
 # Base debian image
 
 RUN echo "base-debian" >> /mark
+
