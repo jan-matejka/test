@@ -7,8 +7,8 @@ on:
         required: true
         type: string
       branch_tag:
-        description: branch tag
         required: true
+        type: string
 
 jobs:
   build-base-runtime-1:
