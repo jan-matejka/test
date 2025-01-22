@@ -33,7 +33,7 @@ jobs:
 
       - id: base-debian-tag
         env:
-          ref: ${{ github.ref }}
+          ref: ${{ github.ref_name }}
           sha: ${{ github.sha }}
           any_changed: ${{ steps.base-debian-changed-files.outputs.any-changed }}
         run: |
@@ -41,7 +41,7 @@ jobs:
           ${any_changed} && {
             echo "$sha" >> "${GITHUB_OUTPUT}"
           } || {
-            echo "$ref" >> "${GITHUB_OUTPUT}"
+            echo "$ref" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
           }
 
   build-base-debian:
