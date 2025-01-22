@@ -23,3 +23,4 @@ Github Tests
 .. |Main CI f/gha-test| image:: https://github.com/jan-matejka/test/actions/workflows/main.yaml/badge.svg?branch=f/gha-test
    :target: https://github.com/jan-matejka/test/tree/master/
    :alt: mq-python CI f/gha-test
+
