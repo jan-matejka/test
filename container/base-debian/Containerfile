@@ -1,4 +1,4 @@
 FROM ghcr.io/linuxcontainers/debian-slim:12
 # Base debian image
 
-RUN echo "base-debian" >> ~/mark
+RUN echo "base-debian" >> /mark

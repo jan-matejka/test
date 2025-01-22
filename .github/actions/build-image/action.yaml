@@ -68,7 +68,7 @@ runs:
         CACHE: >-
           ${{ inputs.registry }}/${{ inputs.repository }}_${{ inputs.image }}
       run: >
-        set -x && cd message-queue &&
+        set -x &&
         podman-compose
         -p ${{ inputs.repository }}
         --podman-build-args "-t ${{ env.IMAGE_FULL }}:${{ github.sha }}

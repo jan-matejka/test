@@ -3,4 +3,6 @@ x-podman:
 
 include:
   - container/base-debian/compose.yaml
-  - container/base-debian-testing/compose.yaml
+  - container/base-runtime-1/compose.yaml
+  - container/base-runtime-2/compose.yaml
+
