@@ -63,7 +63,7 @@ runs:
       run: >
         set -x;
         extra="";
-        [[ "${{ inputs.base_tag }}" != "" ]] && {
+        [ -n "${{ inputs.base_tag }}" ] && {
           extra="--build-arg tag=${{ inputs.base_tag }}"
         };
         podman-compose
