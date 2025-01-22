@@ -23,7 +23,7 @@ jobs:
       # no change and set the tag.
       base-debian-tag: ${{ steps.base-debian-tag.outputs.tag }}
       base-debian: ${{ steps.base-debian.outputs.any-changed }}
-      runtime-1: false
+      runtime-1: true
     steps:
       - uses: actions/checkout@v4
 
@@ -79,15 +79,12 @@ jobs:
     needs:
       - analyze
       - build-base-debian
-    steps:
-      - run: echo yay
-
-      - if: ${{ needs.analyze.outputs.runtime-1 }}
-        uses: ./.github/workflows/runtime-1.yaml
-        with:
-          branch_tag: ${{ needs.analyze.outputs.branch_tag }}
-          base-debian-tag: ${{ needs.analyze.outputs.base-debian-tag }}
-        secrets: inherit
+    if: ${{ needs.analyze.outputs.runtime-1 }}
+    uses: ./.github/workflows/runtime-1.yaml
+    with:
+      branch_tag: ${{ needs.analyze.outputs.branch_tag }}
+      base-debian-tag: ${{ needs.analyze.outputs.base-debian-tag }}
+    secrets: inherit
 
   runtime-2:
     if: false
