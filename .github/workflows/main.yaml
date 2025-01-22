@@ -28,10 +28,10 @@ jobs:
 
       - id: branch-tag
         env:
-          ref: ${{ github.ref_name }}
+          ref_name: ${{ github.ref_name }}
         run: |
-          echo "branch_tag=$ref" | sed 's#/#__#g' >> "${GITHUB_ENV}"
-          echo "branch_tag=$ref" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
+          echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_ENV}"
+          echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
 
       - id: base-debian
         uses: tj-actions/changed-files@v35
