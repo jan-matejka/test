@@ -1,6 +1,11 @@
 name: GHA Testing - Runtime 1
 
-on: [workflow_call]
+on:
+  workflow_call:
+    inputs:
+      base-debian-tag:
+        required: true
+        type: string
 
 jobs:
   info:
@@ -16,6 +21,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: "./.github/actions/build-image"
         with:
+          base_tag: ${{ inputs.base-debian-tag }}
           image: base-runtime-1
           registry: ghcr.io/${{ github.repository_owner }}
           registry_user: ${{ github.actor }}

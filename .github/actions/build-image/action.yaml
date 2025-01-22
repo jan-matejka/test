@@ -21,29 +21,18 @@ inputs:
     description: base image
     required: false
     default: ''
+  base_tag:
+    description: base image tag
+    required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Get changed files
-      id: changed-files
-      uses: tj-actions/changed-files@v45
-
-    - name: Show changed files
-      env:
-        changed: ${{ steps.changed-files.outputs.all_changed_files }}
-      run: printf "%s\n" $changed
-      shell: sh
-
     - name: Install podman-compose
       run: pip3 install podman-compose
       shell: sh
       # Ubuntu also uses too old (1.0.6) version
       #  run: sudo apt-get install -y podman-compose
-
-    - name: Print podman-compose version
-      run: podman-compose version
-      shell: sh
 
     - name: Log in to the Github Container registry
       uses: redhat-actions/podman-login@v1
@@ -56,7 +45,7 @@ runs:
       if: inputs.base != ''
       env:
         BASE: >-
-          ${{ inputs.registry }}/${{ inputs.repository }}_${{ inputs.base }}:${{ github.sha }}
+          ${{ inputs.registry }}/${{ inputs.repository }}_${{ inputs.base }}:${{ inputs.base_tag }}
       run: >
         podman pull ${{ env.BASE }}
       shell: sh
@@ -71,10 +60,12 @@ runs:
         set -x &&
         podman-compose
         -p ${{ inputs.repository }}
-        --podman-build-args "-t ${{ env.IMAGE_FULL }}:${{ github.sha }}
+        --podman-build-args "
+        -t ${{ env.IMAGE_FULL }}:${{ github.sha }}
+        -t ${{ env.IMAGE_FULL }}:${{ github.ref }}
         --cache-from=${{ env.CACHE }}
         --cache-to=${{ env.CACHE }}"
-        build --build-arg tag=${{ github.sha }}
+        build --build-arg tag=${{ inputs.base_tag }}
         --build-arg registry=${{ inputs.registry }}
         "${{ inputs.image }}"
       shell: sh
@@ -87,7 +78,7 @@ runs:
           ${{ inputs.repository }}_${{ inputs.image }}
       with:
         image: ${{ env.IMAGE_FULL }}
-        tags: ${{ github.sha }}
+        tags: ${{ github.sha }} ${{ github.ref }}
         registry: ${{ inputs.registry }}
         username: ${{ inputs.registry_user }}
         password: ${{ inputs.registry_pass }}

@@ -10,14 +10,41 @@ concurrency:
 
 
 jobs:
-  info:
+  analyze:
     runs-on: ubuntu-latest
+    outputs:
+      base-debian-tag: ${{ steps.base-debian-tag.outputs.tag }}
+      base-debian-changed: ${{ steps.base-debian-changed-files.outputs.any-changed }}
     steps:
-      - name: foo
-        run: echo ${{ github.workflow }} /// ${{ github.ref }}
+      - uses: actions/checkout@v4
+
+      - name: Get changed files
+        id: base-debian-changed-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: |
+            container/base-debian/**
+
+      - name: Show changed files
+        env:
+          changed: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: printf "%s\n" $changed
+        shell: sh
+
+      - id: base-debian-tag
+        env:
+          ref=${{ github.ref }}
+          sha=${{ github.sha }}
+        run: |
+          printf "tag=" >> "${GITHUB_OUTPUTS}"
+          ${{ steps.base-debian-changed-files.outputs.any-changed }} && {
+            echo "$sha" >> "${GITHUB_OUTPUTS}"
+          } || {
+            echo "$ref" >> "${GITHUB_OUTPUTS}"
+          }
 
   build-base-debian:
-    if: true
+    if: jobs.analyze.outputs.base-debian-changed
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +59,8 @@ jobs:
     needs:
       - build-base-debian
     uses: ./.github/workflows/runtime-1.yaml
+    with:
+      base-debian-tag: ${{ jobs.analyze.outputs.base-debian-tag }}
     secrets: inherit
 
   runtime-2:
