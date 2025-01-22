@@ -49,7 +49,7 @@ jobs:
       - id: base-debian-tag
         env:
           sha: ${{ github.sha }}
-          any_changed: ${{ steps.base-debian.outputs.any-changed }}
+          any_changed: ${{ toJSON(steps.base-debian.outputs.any-changed) }}
         run: |
           printf "tag=" >> "${GITHUB_OUTPUT}"
           ${any_changed} && {
