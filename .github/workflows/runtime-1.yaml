@@ -19,6 +19,7 @@ jobs:
       - uses: "./.github/actions/build-image"
         with:
           base_tag: ${{ inputs.base-debian-tag }}
+          branch_tag: ${{ inputs.branch_tag }}
           image: base-runtime-1
           registry: ghcr.io/${{ github.repository_owner }}
           registry_user: ${{ github.actor }}
