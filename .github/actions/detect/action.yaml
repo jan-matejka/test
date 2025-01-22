@@ -9,8 +9,12 @@ inputs:
     description:
 
 outputs:
-  tag: ${{ steps.tag.outputs.tag }}
-  changed: ${{ steps.changes.outputs.any_changed }}
+  tag:
+    description:
+    value: ${{ steps.tag.outputs.tag }}
+  changed:
+    description:
+    value: ${{ steps.changes.outputs.any_changed }}
 
 runs:
   using: "composite"
