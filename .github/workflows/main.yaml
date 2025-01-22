@@ -45,13 +45,14 @@ jobs:
           }
 
   build-base-debian:
-    if: needs.analyze.outputs.base-debian-changed
     runs-on: ubuntu-latest
     needs:
       - analyze
     steps:
       - uses: actions/checkout@v4
+        if: needs.analyze.outputs.base-debian-changed
       - uses: "./.github/actions/build-image"
+        if: needs.analyze.outputs.base-debian-changed
         with:
           image: base-debian
           registry: ghcr.io/${{ github.repository_owner }}
