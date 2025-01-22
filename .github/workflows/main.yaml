@@ -36,11 +36,11 @@ jobs:
           ref: ${{ github.ref }}
           sha: ${{ github.sha }}
         run: |
-          printf "tag=" >> "${GITHUB_OUTPUTS}"
+          printf "tag=" >> "${GITHUB_OUTPUT}"
           ${{ steps.base-debian-changed-files.outputs.any-changed }} && {
-            echo "$sha" >> "${GITHUB_OUTPUTS}"
+            echo "$sha" >> "${GITHUB_OUTPUT}"
           } || {
-            echo "$ref" >> "${GITHUB_OUTPUTS}"
+            echo "$ref" >> "${GITHUB_OUTPUT}"
           }
 
   build-base-debian:
