@@ -22,9 +22,10 @@ jobs:
       # However, then we would'be wasting checkouts just to determine there is
       # no change and set the tag.
       base-debian-tag: ${{ steps.base-debian-tag.outputs.tag }}
-      base-debian: ${{ steps.base-debian.outputs.any-changed }}
+      base-debian: ${{ steps.base-debian.outputs.any_changed }}
       runtime-1: true
     steps:
+      # TBD: check if $ref_name exists in registry, otheriwse build.
       - uses: actions/checkout@v4
 
       - id: branch-tag
@@ -50,7 +51,7 @@ jobs:
       - id: base-debian-tag
         env:
           sha: ${{ github.sha }}
-          any_changed: ${{ toJSON(steps.base-debian.outputs.any-changed) }}
+          any_changed: ${{ toJSON(steps.base-debian.outputs.any_changed) }}
         run: |
           printf "tag=" >> "${GITHUB_OUTPUT}"
           ${any_changed} && {
