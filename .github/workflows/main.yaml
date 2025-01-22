@@ -13,6 +13,7 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     outputs:
+      branch_tag: ${{ steps.branch-tag.outputs.branch_tag }}
       # It would make sense to run these within the image build job so we can
       # refer to outputs like:
       # - needs.base-debian.outputs.tag
@@ -24,6 +25,13 @@ jobs:
       base-debian: ${{ steps.base-debian.outputs.any-changed }}
     steps:
       - uses: actions/checkout@v4
+
+      - id: branch-tag
+        env:
+          ref: ${{ github.ref_name }}
+        run: |
+          echo "branch_tag=$ref" | sed 's#/#__#g' >> "${GITHUB_ENV}"
+          echo "branch_tag=$ref" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
 
       - id: base-debian
         uses: tj-actions/changed-files@v35
@@ -40,7 +48,6 @@ jobs:
 
       - id: base-debian-tag
         env:
-          ref: ${{ github.ref_name }}
           sha: ${{ github.sha }}
           any_changed: ${{ steps.base-debian.outputs.any-changed }}
         run: |
@@ -48,7 +55,7 @@ jobs:
           ${any_changed} && {
             echo "$sha" >> "${GITHUB_OUTPUT}"
           } || {
-            echo "$ref" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
+            echo "$branch_tag" >> "${GITHUB_OUTPUT}"
           }
 
   build-base-debian:
