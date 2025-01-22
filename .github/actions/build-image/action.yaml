@@ -23,7 +23,8 @@ inputs:
     default: ''
   base_tag:
     description: base image tag
-    required: true
+    required: false
+    default: ''
   branch_tag:
     description: branch tag
     required: true
@@ -60,7 +61,11 @@ runs:
         CACHE: >-
           ${{ inputs.registry }}/${{ inputs.repository }}_${{ inputs.image }}
       run: >
-        set -x &&
+        set -x;
+        extra="";
+        [[ "${{ inputs.base_tag }}" != "" ]] && {
+          extra="--build-arg tag=${{ inputs.base_tag }}"
+        };
         podman-compose
         -p ${{ inputs.repository }}
         --podman-build-args "
@@ -69,7 +74,7 @@ runs:
         --cache-from=${{ env.CACHE }}
         --cache-to=${{ env.CACHE }}"
         build
-        --build-arg tag=${{ inputs.base_tag }}
+        $extra
         --build-arg registry=${{ inputs.registry }}
         "${{ inputs.image }}"
       shell: sh
