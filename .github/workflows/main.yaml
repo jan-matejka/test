@@ -33,8 +33,8 @@ jobs:
 
       - id: base-debian-tag
         env:
-          ref=${{ github.ref }}
-          sha=${{ github.sha }}
+          ref: ${{ github.ref }}
+          sha: ${{ github.sha }}
         run: |
           printf "tag=" >> "${GITHUB_OUTPUTS}"
           ${{ steps.base-debian-changed-files.outputs.any-changed }} && {
