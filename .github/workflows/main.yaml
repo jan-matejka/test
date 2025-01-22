@@ -13,21 +13,28 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     outputs:
+      # It would make sense to run these within the image build job so we can
+      # refer to outputs like:
+      # - needs.base-debian.outputs.tag
+      # - needs.base-debian.outputs.is_changed
+      #
+      # However, then we would'be wasting checkouts just to determine there is
+      # no change and set the tag.
       base-debian-tag: ${{ steps.base-debian-tag.outputs.tag }}
-      base-debian-changed: ${{ steps.base-debian-changed-files.outputs.any-changed }}
+      base-debian: ${{ steps.base-debian.outputs.any-changed }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get changed files
-        id: base-debian-changed-files
+      - id: base-debian
         uses: tj-actions/changed-files@v35
         with:
           files: |
             container/base-debian/**
 
-      - name: Show changed files
+      - name: Show base-debian changed files
         env:
-          changed: ${{ steps.changed-files.outputs.all_changed_files }}
+          changed: ${{ steps.base-debian.outputs.all_changed_files }}
+        # TBD: this can easily go out of argv limits
         run: printf "%s\n" $changed
         shell: sh
 
@@ -35,7 +42,7 @@ jobs:
         env:
           ref: ${{ github.ref_name }}
           sha: ${{ github.sha }}
-          any_changed: ${{ steps.base-debian-changed-files.outputs.any-changed }}
+          any_changed: ${{ steps.base-debian.outputs.any-changed }}
         run: |
           printf "tag=" >> "${GITHUB_OUTPUT}"
           ${any_changed} && {
@@ -50,9 +57,9 @@ jobs:
       - analyze
     steps:
       - uses: actions/checkout@v4
-        if: needs.analyze.outputs.base-debian-changed
+        if: needs.analyze.outputs.base-debian
       - uses: "./.github/actions/build-image"
-        if: needs.analyze.outputs.base-debian-changed
+        if: needs.analyze.outputs.base-debian
         with:
           image: base-debian
           registry: ghcr.io/${{ github.repository_owner }}
