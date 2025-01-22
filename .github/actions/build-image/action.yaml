@@ -65,10 +65,10 @@ runs:
         -p ${{ inputs.repository }}
         --podman-build-args "
         -t ${{ env.IMAGE_FULL }}:${{ github.sha }}
-        -t ${{ env.IMAGE_FULL }}:${{ inputs.branch_tag }}
         --cache-from=${{ env.CACHE }}
         --cache-to=${{ env.CACHE }}"
-        build --build-arg tag=${{ inputs.base_tag }}
+        build
+        --build-arg tag=${{ inputs.base_tag }}
         --build-arg registry=${{ inputs.registry }}
         "${{ inputs.image }}"
       shell: sh
