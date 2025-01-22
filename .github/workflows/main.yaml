@@ -66,9 +66,9 @@ jobs:
       - analyze
     steps:
       - uses: actions/checkout@v4
-        if: needs.analyze.outputs.base-debian
+        if: needs.analyze.outputs.base-debian == 'true'
       - uses: "./.github/actions/build-image"
-        if: needs.analyze.outputs.base-debian
+        if: needs.analyze.outputs.base-debian == 'true'
         with:
           branch_tag: ${{ needs.analyze.outputs.branch_tag }}
           image: base-debian
@@ -80,7 +80,7 @@ jobs:
     needs:
       - analyze
       - build-base-debian
-    if: ${{ needs.analyze.outputs.runtime-1 }}
+    if: ${{ needs.analyze.outputs.runtime-1 == 'true' }}
     uses: ./.github/workflows/runtime-1.yaml
     with:
       branch_tag: ${{ needs.analyze.outputs.branch_tag }}
