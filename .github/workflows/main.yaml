@@ -22,8 +22,8 @@ jobs:
       # However, then we would'be wasting checkouts just to determine there is
       # no change and set the tag.
       base-debian-tag: ${{ steps.tags.outputs.base_debian_tag }}
-      base-debian: ${{ steps.changes.outputs.base_debian_any_changed }}
-      runtime-1: ${{ (steps.changes.outputs.runtime_1_any_changed || steps.changes.outputs.base_debian_any_changed) }}
+      base-debian: ${{ steps.tags.outputs.base_debian_changed }}
+      runtime-1: ${{ steps.tags.outputs.runtime_1_changed }}
     steps:
       # TBD: check if $ref_name exists in registry, otheriwse build.
       - uses: actions/checkout@v4
@@ -56,16 +56,17 @@ jobs:
           function mk_output {
             local changed=$1
             local name=$2
-            printf "%s_tag=" $name >> "${GITHUB_OUTPUT}"
             $changed && {
-              echo "$sha" >> "${GITHUB_OUTPUT}"
+              printf "%s_tag=%s\n" $name $sha" >> "${GITHUB_OUTPUT}"
+              printf "%s_changed=true\n" $name >> "${GITHUB_OUTPUT}"
             } || {
-              echo "$branch_tag" >> "${GITHUB_OUTPUT}"
+              printf "%s_tag=%s\n" $name $branch_tag" >> "${GITHUB_OUTPUT}"
+              printf "%s_changed=false\n" $name >> "${GITHUB_OUTPUT}"
             }
           }
           set -x;
           mk_output ${base_debian_changed} base_debian;
-          mk_output ${runtime_1_changed} runtime_1;
+          mk_output "${base_debian_changed} || ${runtime_1_changed}" runtime_1;
 
   build-base-debian:
     runs-on: ubuntu-latest
