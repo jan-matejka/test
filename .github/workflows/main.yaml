@@ -42,7 +42,7 @@ jobs:
           sha: ${{ github.sha }}
           ref_name: ${{ github.ref_name }}
           base-debian_changed: ${{ steps.changes.outputs.base-debian_any_changed }}
-          runtime-1_changed: ${{ steps.changes.outputs.runtime-1_any_changed }}
+          runtime-1_changed: ${{ steps.changes.outputs.runtime-1_any_changed }} || ${{ steps.changes.outputs.base-debian_any_changed }}
         run: |
           function mk_output {
             local changed=$1
