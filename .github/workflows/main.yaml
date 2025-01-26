@@ -23,7 +23,7 @@ jobs:
       # no change and set the tag.
       base-debian-tag: ${{ steps.tags.outputs.base-debian_tag }}
       base-debian: ${{ steps.changes.outputs.base-debian_any_changed }}
-      runtime-1: false
+      runtime-1: ${{ steps.changes.outputs.runtime-1_any_changed || steps.changes.outputs.base-debian_any_changed }}
     steps:
       # TBD: check if $ref_name exists in registry, otheriwse build.
       - uses: actions/checkout@v4
@@ -34,19 +34,30 @@ jobs:
           files_yaml: |
             base-debian:
               - containers/base-debian/**
+            runtime-1:
+              - containers/base-runtime-1/**
 
       - id: tags
         env:
           sha: ${{ github.sha }}
           ref_name: ${{ github.ref_name }}
-          any_changed: ${{ steps.changes.outputs.base-debian_any_changed }}
         run: |
-          printf "base-debian_tag=" >> "${GITHUB_OUTPUT}"
-          ${any_changed} && {
-            echo "$sha" >> "${GITHUB_OUTPUT}"
-          } || {
-            echo "$ref_name" >> "${GITHUB_OUTPUT}"
+          function mk_output {
+            local changed=$1
+            local name=$2
+            printf "%s=" $name >> "${GITHUB_OUTPUT}"
+            $changed && {
+              echo "$sha" >> "${GITHUB_OUTPUT}"
+            } || {
+              echo "$ref_name" >> "${GITHUB_OUTPUT}"
+            }
           }
+
+          mk_output \
+            ${{ steps.changes.outputs.base-debian_any_changed }} base-debian;
+
+          mk_output \
+            ${{ steps.changes.outputs.runtime-1_any_changed }} runtime-1;
 
   build-base-debian:
     runs-on: ubuntu-latest
@@ -68,7 +79,7 @@ jobs:
     needs:
       - analyze
       - build-base-debian
-    if: ${{ needs.analyze.outputs.runtime-1 == 'true' }}
+    if: needs.analyze.outputs.runtime-1 == 'true'
     uses: ./.github/workflows/runtime-1.yaml
     with:
       branch_tag: ${{ needs.analyze.outputs.branch_tag }}
