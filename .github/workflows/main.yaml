@@ -21,25 +21,32 @@ jobs:
       #
       # However, then we would'be wasting checkouts just to determine there is
       # no change and set the tag.
-      base-debian-tag: ${{ steps.base-debian.outputs.tag }}
-      base-debian: ${{ steps.base-debian.outputs.changed }}
-      runtime-1: true
+      base-debian-tag: ${{ steps.tags.outputs.base-debian_tag }}
+      base-debian: ${{ steps.changes.outputs.base-debian_any_changed }}
+      runtime-1: false
     steps:
       # TBD: check if $ref_name exists in registry, otheriwse build.
       - uses: actions/checkout@v4
 
-      - id: branch-tag
-        env:
-          ref_name: ${{ github.ref_name }}
-        run: |
-          echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_ENV}"
-          echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
-
-      - id: base-debian
-        uses: "./.github/actions/detect"
+      - id: changes
+        uses: tj-actions/changed-files@v35
         with:
-          branch_tag: ${{ needs.analyze.outputs.branch_tag }}
-          paths: containers/base-debian/**
+          files_yaml: |
+            base-debian:
+              - containers/base-debian/**
+
+      - id: tags
+        env:
+          sha: ${{ github.sha }}
+          ref_name: ${{ github.ref_name }}
+          any_changed: ${{ steps.changes.outputs.base-debian_any_changed }}
+        run: |
+          printf "base-debian_tag=" >> "${GITHUB_OUTPUT}"
+          ${any_changed} && {
+            echo "$sha" >> "${GITHUB_OUTPUT}"
+          } || {
+            echo "$ref_name" >> "${GITHUB_OUTPUT}"
+          }
 
   build-base-debian:
     runs-on: ubuntu-latest
