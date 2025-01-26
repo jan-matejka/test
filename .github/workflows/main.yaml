@@ -28,6 +28,13 @@ jobs:
       # TBD: check if $ref_name exists in registry, otheriwse build.
       - uses: actions/checkout@v4
 
+      - id: branch-tag
+        env:
+          ref_name: ${{ github.ref_name }}
+        run: |
+          echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_ENV}"
+          echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
+
       - id: changes
         uses: tj-actions/changed-files@v45
         with:
@@ -40,9 +47,11 @@ jobs:
       - id: tags
         env:
           sha: ${{ github.sha }}
-          ref_name: ${{ github.ref_name }}
           base_debian_changed: ${{ steps.changes.outputs.base_debian_any_changed }}
-          runtime_1_changed: ${{ steps.changes.outputs.runtime_1_any_changed }}
+          runtime_1_changed: ${{
+            (steps.changes.outputs.runtime_1_any_changed
+            || steps.changes.outputs.base_debian_any_change)
+            }}
         run: |
           function mk_output {
             local changed=$1
@@ -51,7 +60,7 @@ jobs:
             $changed && {
               echo "$sha" >> "${GITHUB_OUTPUT}"
             } || {
-              echo "$ref_name" >> "${GITHUB_OUTPUT}"
+              echo "$branch_tag" >> "${GITHUB_OUTPUT}"
             }
           }
           set -x;
