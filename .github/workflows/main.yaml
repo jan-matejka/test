@@ -33,9 +33,9 @@ jobs:
         with:
           files_yaml: |
             base_debian:
-              - containers/base-debian/**
+              - container/base-debian/**
             runtime_1:
-              - containers/base-runtime-1/**
+              - container/base-runtime-1/**
 
       - id: tags
         env:
