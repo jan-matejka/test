@@ -68,7 +68,7 @@ jobs:
           sha: ${{ github.sha }}
           base_debian_changed: ${{ steps.changes.outputs.base_debian_any_changed }}
           runtime_1_changed: ${{ steps.changes.outputs.runtime_1_any_changed }}
-          telemetry_1_changed: ${{ steps.changes.outputs.telemetry_any_changed }}
+          telemetry_changed: ${{ steps.changes.outputs.telemetry_any_changed }}
         run: |
           function mk_output {
             local changed=$1
@@ -107,6 +107,9 @@ jobs:
   build-base-runtime-1:
     if: true
     runs-on: ubuntu-latest
+    needs:
+      - analyze
+      - build-base-debian
     steps:
       - uses: actions/checkout@v4
         if: needs.analyze.outputs.runtime-1 == 'true'
