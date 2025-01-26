@@ -54,13 +54,15 @@ jobs:
           function mk_output {
             local changed=$1
             local name=$2
-            $changed && {
-              printf "%s_tag=%s\n" $name $sha" >> "${GITHUB_OUTPUT}"
-              printf "%s_changed=true\n" $name >> "${GITHUB_OUTPUT}"
-            } || {
-              printf "%s_tag=%s\n" $name $branch_tag" >> "${GITHUB_OUTPUT}"
-              printf "%s_changed=false\n" $name >> "${GITHUB_OUTPUT}"
-            }
+            {
+              $changed && {
+                printf "%s_tag=%s\n" $name $sha
+                printf "%s_changed=true\n" $name
+              } || {
+                printf "%s_tag=%s\n" $name $branch_tag
+                printf "%s_changed=false\n" $name
+              }
+            } >> "${GITHUB_OUTPUT}"
           }
           set -x;
           mk_output ${base_debian_changed} base_debian;
