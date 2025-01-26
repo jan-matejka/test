@@ -23,7 +23,7 @@ jobs:
       # no change and set the tag.
       base-debian-tag: ${{ steps.tags.outputs.base-debian_tag }}
       base-debian: ${{ steps.changes.outputs.base-debian_any_changed }}
-      runtime-1: ${{ steps.changes.outputs.runtime-1_any_changed || steps.changes.outputs.base-debian_any_changed }}
+      runtime-1: ${{ (steps.changes.outputs.runtime-1_any_changed || steps.changes.outputs.base-debian_any_changed) }}
     steps:
       # TBD: check if $ref_name exists in registry, otheriwse build.
       - uses: actions/checkout@v4
