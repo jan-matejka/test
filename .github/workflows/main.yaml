@@ -41,8 +41,8 @@ jobs:
         env:
           sha: ${{ github.sha }}
           ref_name: ${{ github.ref_name }}
-          base-debian_changed: ${{ steps.changes.outputs.base-debian_any_changed }}
-          runtime-1_changed: ${{ steps.changes.outputs.runtime-1_any_changed }} || ${{ steps.changes.outputs.base-debian_any_changed }}
+          base_debian_changed: ${{ steps.changes.outputs.base-debian_any_changed }}
+          runtime_1_changed: ${{ steps.changes.outputs.runtime-1_any_changed }} || ${{ steps.changes.outputs.base-debian_any_changed }}
         run: |
           function mk_output {
             local changed=$1
@@ -55,8 +55,8 @@ jobs:
             }
           }
           set -x;
-          mk_output ${base-debian_changed} base-debian;
-          mk_output ${runtime-1_changed} runtime-1;
+          mk_output ${base_debian_changed} base_debian;
+          mk_output ${runtime_1_changed} runtime_1;
 
   build-base-debian:
     runs-on: ubuntu-latest
