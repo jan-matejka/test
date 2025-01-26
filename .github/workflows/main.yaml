@@ -21,9 +21,9 @@ jobs:
       #
       # However, then we would'be wasting checkouts just to determine there is
       # no change and set the tag.
-      base-debian-tag: ${{ steps.tags.outputs.base-debian_tag }}
-      base-debian: ${{ steps.changes.outputs.base-debian_any_changed }}
-      runtime-1: ${{ (steps.changes.outputs.runtime-1_any_changed || steps.changes.outputs.base-debian_any_changed) }}
+      base-debian-tag: ${{ steps.tags.outputs.base_debian_tag }}
+      base-debian: ${{ steps.changes.outputs.base_debian_any_changed }}
+      runtime-1: ${{ (steps.changes.outputs.runtime_1_any_changed || steps.changes.outputs.base_debian_any_changed) }}
     steps:
       # TBD: check if $ref_name exists in registry, otheriwse build.
       - uses: actions/checkout@v4
@@ -32,22 +32,22 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           files_yaml: |
-            base-debian:
+            base_debian:
               - containers/base-debian/**
-            runtime-1:
+            runtime_1:
               - containers/base-runtime-1/**
 
       - id: tags
         env:
           sha: ${{ github.sha }}
           ref_name: ${{ github.ref_name }}
-          base_debian_changed: ${{ steps.changes.outputs.base-debian_any_changed }}
-          runtime_1_changed: ${{ steps.changes.outputs.runtime-1_any_changed }}
+          base_debian_changed: ${{ steps.changes.outputs.base_debian_any_changed }}
+          runtime_1_changed: ${{ steps.changes.outputs.runtime_1_any_changed }}
         run: |
           function mk_output {
             local changed=$1
             local name=$2
-            printf "%s=" $name >> "${GITHUB_OUTPUT}"
+            printf "%s_tag=" $name >> "${GITHUB_OUTPUT}"
             $changed && {
               echo "$sha" >> "${GITHUB_OUTPUT}"
             } || {
