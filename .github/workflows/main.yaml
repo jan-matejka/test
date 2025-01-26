@@ -63,7 +63,9 @@ jobs:
           }
           set -x;
           mk_output ${base_debian_changed} base_debian;
-          mk_output "bash -c '${base_debian_changed} || ${runtime_1_changed}'" runtime_1;
+
+          runtime_1=$(${base_debian_changed} || ${runtime_1_changed});
+          mk_output $runtime_1 runtime_1;
 
   build-base-debian:
     runs-on: ubuntu-latest
