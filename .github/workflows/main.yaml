@@ -26,6 +26,11 @@ jobs:
     steps:
       # TBD: check if $ref_name exists in registry, otheriwse build.
       - uses: actions/checkout@v4
+        with:
+          # Just fetch everything here.
+          # The tj-actions/changed-files action is not smart enough to fetch
+          # whatever amount it actually needs.
+          fetch-depth: 0
 
       - id: branch-tag
         env:
@@ -41,7 +46,9 @@ jobs:
             base_debian:
               - container/base-debian/**
             runtime_1:
+              # base debian:
               - container/base-debian/**
+              # runtime-1:
               - container/base-runtime-1/**
 
       - id: tags
