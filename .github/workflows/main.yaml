@@ -68,7 +68,7 @@ jobs:
           sha: ${{ github.sha }}
           base_debian_changed: ${{ steps.changes.outputs.base_debian_any_changed }}
           runtime_1_changed: ${{ steps.changes.outputs.runtime_1_any_changed }}
-          runtime_1_changed: ${{ steps.changes.outputs.telemetry_any_changed }}
+          telemetry_1_changed: ${{ steps.changes.outputs.telemetry_any_changed }}
         run: |
           function mk_output {
             local changed=$1
