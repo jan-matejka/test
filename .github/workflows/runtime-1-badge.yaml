@@ -1,0 +1,18 @@
+name: Runtime 1 - Badge
+
+on:
+  workflow_run:
+    types: [completed]
+    workflows: "GHA Testing - Runtime 1"
+
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - run: echo 'The triggering workflow passed'
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'The triggering workflow failed'; false
