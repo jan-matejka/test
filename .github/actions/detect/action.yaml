@@ -18,7 +18,7 @@ outputs:
     value: ${{ steps.tag.outputs.tag }}
   changed:
     description:
-    value: ${{ fromJSON(steps.changes-push.outputs.any_changed) }}
+    value: ${{ steps.changes-push.outputs.any_changed }}
 
 runs:
   using: "composite"
