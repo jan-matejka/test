@@ -7,7 +7,9 @@ inputs:
   workflow:
     required: true
     description: Workflow filename
-
+  inputs:
+    required: true
+    description: inputs json
 
 runs:
   using: "composite"
