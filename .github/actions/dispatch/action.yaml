@@ -32,8 +32,8 @@ runs:
             -H "Authorization: Bearer $token" \
             -H "Accept: application/vnd.github.v3+json" \
             -d '{
-              "ref": '${ref}',
+              "ref": "'"${ref}"'",
               "inputs": {
-                "before": '${before}',
-                "after": '${after}',
+                "before": "'"${before}"'",
+                "after": "'"${after}"'",
               }}'
