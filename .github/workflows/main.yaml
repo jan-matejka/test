@@ -34,6 +34,8 @@ jobs:
           # whatever amount it actually needs.
           fetch-depth: 0
 
+      - run: false
+
       - id: branch-tag
         env:
           ref_name: ${{ github.ref_name }}
