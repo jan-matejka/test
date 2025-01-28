@@ -30,8 +30,6 @@ runs:
         base_sha: ${{ inputs.before }}
 
     - id: changes-branch
-      needs:
-        - changes-push
       if: ${{ ! steps.changes-push.outputs.any_changed }}
       uses: tj-actions/changed-files@v45
       with:
@@ -39,8 +37,6 @@ runs:
         base_sha: ${{ github.event.repository.default_branch }}
 
     - id: tag
-      needs:
-        - changes-branch
       if: ${{ ! failure() }}
       env:
         sha: ${{ github.sha }}
