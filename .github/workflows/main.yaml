@@ -45,7 +45,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           workflow: called.yaml
-          inputs:
+          inputs: |
             before: ${{ github.event.before }}
             after: ${{ github.event.after }}
 
