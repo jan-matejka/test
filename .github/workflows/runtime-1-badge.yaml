@@ -3,7 +3,7 @@ name: Runtime 1 - Badge
 on:
   workflow_run:
     types: [completed]
-    workflows: "GHA Testing - Runtime 1"
+    workflows: "GHA Testing - Main Workflow"
 
 jobs:
   on-success:
