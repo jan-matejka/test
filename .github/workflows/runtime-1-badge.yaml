@@ -1,7 +1,8 @@
 name: Runtime 1 - Badge
 
 on:
-  workflow_run:
+  never
+  # workflow_run:
     types: [completed]
     workflows: "GHA Testing - Main Workflow"
 
