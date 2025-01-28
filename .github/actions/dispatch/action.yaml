@@ -7,9 +7,12 @@ inputs:
   workflow:
     required: true
     description: Workflow filename
-  inputs:
+  before:
     required: true
-    description: inputs json
+    description: before sha
+  after:
+    required: true
+    description: after sha
 
 runs:
   using: "composite"
@@ -23,7 +26,7 @@ runs:
       run: |
           curl \
             -X POST $URL \
-            -H "Authorization: Bearer $repo_token" \
+            -H "Authorization: Bearer $token" \
             -H "Accept: application/vnd.github.v3+json" \
             -d '{
               "ref": ${{ github.ref }},
