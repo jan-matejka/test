@@ -40,29 +40,30 @@ jobs:
   call-sh:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Reusable Workflow
-        id: trigger
-        env:
-          REF: ${{ github.ref }}
-          BEFORE: ${{ github.event.before }}
-          AFTER: ${{ github.event.after }}
-        run: |
-          repo_token="${{ secrets.GITHUB_TOKEN }}"
-          workflow_file="called.yaml"
-          payload="{\"ref\": \"$REF\", \"inputs\": {\"before\":\"${BEFORE}\", \"after\": \"${AFTER}\"}}"
-          response=$(curl -X POST "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${workflow_file}/dispatches" \
-            -H "Authorization: Bearer $repo_token" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d "$payload")
-          echo "$response"
+      - name: Trigger dispatched
+        uses: ./.github/actions/dispatch
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: called.yaml
+          inputs:
+            before: ${{ github.event.before }}
+            after: ${{ github.event.after }}
 
-      - name: show status
-        if: always()
-        run:
-          echo outcome ${{ steps.trigger.outcome }}
-          echo conclusion ${{ steps.trigger.conclusion }}
-          echo ${{ toJSON(steps.trigger.outputs) }}
-
+#      - name: Trigger Reusable Workflow
+#        id: trigger
+#        env:
+#          REF: ${{ github.ref }}
+#          BEFORE: ${{ github.event.before }}
+#          AFTER: ${{ github.event.after }}
+#        run: |
+#          repo_token="${{ secrets.GITHUB_TOKEN }}"
+#          workflow_file="called.yaml"
+#          payload="{\"ref\": \"$REF\", \"inputs\": {\"before\":\"${BEFORE}\", \"after\": \"${AFTER}\"}}"
+#          response=$(curl -X POST "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${workflow_file}/dispatches" \
+#            -H "Authorization: Bearer $repo_token" \
+#            -H "Accept: application/vnd.github.v3+json" \
+#            -d "$payload")
+#          echo "$response"
 
 # jobs:
 #   analyze:
