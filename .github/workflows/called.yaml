@@ -1,6 +1,14 @@
 name: called
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      before:
+        type: string
+        required: true
+      after:
+        type: string
+        required: true
 
 jobs:
   my_job:

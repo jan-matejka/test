@@ -21,7 +21,7 @@ jobs:
         with:
           script: |
             const [owner, repo] = context.repo();
-            x = await github.rest.actions.createWorkflowDispatch({
+            x = github.rest.actions.createWorkflowDispatch({
               owner,
               repo,
               "called.yaml",
