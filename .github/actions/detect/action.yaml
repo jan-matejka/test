@@ -1,12 +1,16 @@
 name: Detect changes
 description:
+
 inputs:
   paths:
     required: true
     description: paths that trigger the build
   branch_tag:
     required: true
-    description:
+    description: branch tag for the image
+  before:
+    required: true
+    description: before sha
 
 outputs:
   tag:
@@ -14,32 +18,44 @@ outputs:
     value: ${{ steps.tag.outputs.tag }}
   changed:
     description:
-    value: ${{ steps.changes.outputs.any_changed }}
+    value: ${{ steps.changes-push.outputs.any_changed }}
 
 runs:
   using: "composite"
   steps:
-    - id: changes
-      uses: tj-actions/changed-files@v35
+    - id: changes-push
+      uses: tj-actions/changed-files@v45
       with:
         files: ${{ inputs.paths }}
+        base_sha: ${{ inputs.before }}
 
-    - name: Show changes
-      env:
-        changed: ${{ steps.changes.outputs.all_changed_files }}
-      # TBD: this can easily go out of argv limits
-      run: printf "%s\n" $changed
-      shell: sh
+    - id: changes-branch
+      needs:
+        - changes-push
+      if: ${{ ! steps.changes-push.outputs.any_changed }}
+      uses: tj-actions/changed-files@v45
+      with:
+        files: ${{ inputs.paths }}
+        base_sha: ${{ github.event.repository.default_branch }}
 
     - id: tag
+      needs:
+        - changes-branch
+      if: ${{ ! failure() }}
       env:
         sha: ${{ github.sha }}
-        any_changed: ${{ steps.base-debian.outputs.any_changed }}
+        push_changed: ${{ steps.changes-push.outputs.any_changed }}
+        branch_changed: ${{ steps.changes-branch.outputs.any_changed }}
+        default: ${{ github.event.repository.default_branch }}
       run: |
         printf "tag=" >> "${GITHUB_OUTPUT}"
-        ${any_changed} && {
+        ${push_changed} && {
           echo "$sha" >> "${GITHUB_OUTPUT}"
         } || {
-          echo "$branch_tag" >> "${GITHUB_OUTPUT}"
+          ${branch_changed} && {
+            echo "$branch_tag" >> "${GITHUB_OUTPUT}"
+          } || {
+            echo "$default" >> "${GITHUB_OUTPUT}"
+          }
         }
       shell: sh
