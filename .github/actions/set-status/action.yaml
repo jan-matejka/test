@@ -12,16 +12,7 @@ runs:
   using: "composite"
   steps:
     - env:
-        payload: ${{ toJSON({
-            state: inputs.status,
-            target_url: format(
-              "{0}/{1}/actions/runs/{2}",
-              github.server_url,
-              github.repository,
-              github.run_id,
-            ),
-            context: github.workflow,
-          }) }}
+        payload: ${{ toJSON({state: inputs.status, target_url: format("{0}/{1}/actions/runs/{2}", github.server_url, github.repository, github.run_id), context: github.workflow}) }}
         repo: ${{ github.repository }}
         token: ${{ inputs.token }}
         sha: ${{ github.sha }}
