@@ -22,6 +22,9 @@ runs:
         token: ${{ inputs.token }}
         sha: ${{ github.sha }}
         URL:  https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ inputs.workflow }}/dispatches
+        ref: ${{ toJSON(github.ref) }}
+        before: ${{ toJSON(github.before) }}
+        after: ${{ toJSON(github.after) }}
       shell: sh
       run: |
           curl \
@@ -29,8 +32,8 @@ runs:
             -H "Authorization: Bearer $token" \
             -H "Accept: application/vnd.github.v3+json" \
             -d '{
-              "ref": ${{ github.ref }},
+              "ref": '${ref}',
               "inputs": {
-                "before": "${{ inputs.before }}",
-                "after": "${{ inputs.after }}",
+                "before": '${before}',
+                "after": '${after}',
               }}'
