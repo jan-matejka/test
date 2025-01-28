@@ -1,0 +1,29 @@
+name: Trigger Workflow
+
+inputs:
+  token:
+    required: true
+    description: github token
+  workflow:
+    required: true
+    description: Workflow filename
+
+
+runs:
+  using: "composite"
+  steps:
+    - env:
+        repo: ${{ github.repository }}
+        token: ${{ inputs.token }}
+        sha: ${{ github.sha }}
+        URL:  https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ inputs.workflow }}/dispatches
+      shell: sh
+      run: |
+          curl
+            -X POST $URL \
+            -H "Authorization: Bearer $repo_token" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{
+              "ref": ${{ github.ref }}.
+              "inputs": ${{ toJSON(inputs.inputs) }},
+              }'
