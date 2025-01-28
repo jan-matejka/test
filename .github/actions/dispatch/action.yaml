@@ -31,6 +31,6 @@ runs:
             -d '{
               "ref": ${{ github.ref }},
               "inputs": {
-                "before": ${{ inputs.before }},
-                "after": "${{ inputs.after }},
+                "before": "${{ inputs.before }}",
+                "after": "${{ inputs.after }}",
               }}'
