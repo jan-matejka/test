@@ -1,0 +1,36 @@
+name: Set commit status
+
+inputs:
+  token:
+    required: true
+    description: github token
+  status:
+    required: true
+    description: success | pending | failure | error
+
+runs:
+  using: "composite"
+  steps:
+    - env:
+        payload: ${{ toJSON({
+            state: inputs.status,
+            target_url: format(
+              "{0}/{1}/actions/runs/{2}",
+              github.server_url,
+              github.repository,
+              github.run_id,
+            ),
+            context: github.workflow,
+          }) }}
+        repo: ${{ github.repository }}
+        token: ${{ inputs.token }}
+        sha: ${{ github.sha }}
+      run: |
+        curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $token" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/$repo/statuses/$sha \
+          -d $payload
+
