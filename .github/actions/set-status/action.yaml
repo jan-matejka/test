@@ -31,5 +31,5 @@ runs:
               github.repository,
               github.run_id
             )) }}, \
-            "context": ${{ toJSON(github.workflow) }}'
+            "context": ${{ toJSON(github.workflow) }} }'
 
