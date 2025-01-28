@@ -54,10 +54,14 @@ jobs:
 
       - uses: ./.github/actions/detect
         with:
-          paths: [container/base-runtime-1/**]
+          paths: container/base-runtime-1/**
           branch_tag: ${{ env.branch_tag }}
           before: ${{ github.event.before }}
         id: base-runtime
+
+      - name: show detect output
+        if: true
+        run: echo ${{ toJSON(steps.base-runtime.outputs) }}
 
       - name: Trigger dispatched
         if: steps.base-runtime.outputs.changed
