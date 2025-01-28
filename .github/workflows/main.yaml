@@ -54,8 +54,7 @@ jobs:
 
       - uses: ./.github/actions/detect
         with:
-          paths:
-            - container/base-runtime-1/**
+          paths: [container/base-runtime-1/**]
           branch_tag: ${{ env.branch_tag }}
           before: ${{ github.event.before }}
         id: base-runtime
