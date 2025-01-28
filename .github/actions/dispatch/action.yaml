@@ -20,11 +20,11 @@ runs:
         sha: ${{ github.sha }}
         URL:  https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ inputs.workflow }}/dispatches
       shell: sh
-      run: |
-          curl \
-            -X POST $URL \
-            -H "Authorization: Bearer $repo_token" \
-            -H "Accept: application/vnd.github.v3+json" \
+      run: >
+          curl
+            -X POST $URL
+            -H "Authorization: Bearer $repo_token"
+            -H "Accept: application/vnd.github.v3+json"
             -d '{
               "ref": ${{ github.ref }}.
               "inputs": ${{ toJSON(inputs.inputs) }},
