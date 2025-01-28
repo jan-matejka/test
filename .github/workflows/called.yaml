@@ -14,7 +14,28 @@ jobs:
   my_job:
     runs-on: ubuntu-latest
     steps:
+      - name: Set commit status as pending
+        uses: myrotvorets/set-commit-status-action@master
+        with:
+          sha: ${{ github.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: pending
+
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.comment-branch.outputs.head_ref }}
+      - name: Print stuff
+        run: echo "Hello dudes!"
+
       - run: echo "::set-output name=status::success"; false
+
+      - name: Set final commit status
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          sha: ${{ github.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
 
   dump_contexts_to_log:
     runs-on: ubuntu-latest
