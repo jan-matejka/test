@@ -9,10 +9,6 @@ on:
       after:
         type: string
         required: true
-    outputs:
-      status:
-        description: foo
-        value: ${{ jobs.my_job.steps.main.status }}
 
 jobs:
   my_job:
@@ -25,7 +21,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
 
-      - run: echo "::set-output name=status::success"; false
+      - run: false
         id: main
 
       - name: Set final commit status
