@@ -20,7 +20,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const owner, repo = context.repo();
+            const [owner, repo] = context.repo();
             x = await github.rest.actions.createWorkflowDispatch({
               owner,
               repo,
@@ -46,7 +46,7 @@ jobs:
           repo_token="${{ secrets.GITHUB_TOKEN }}"
           workflow_file="called.yaml"
           payload="{\"ref\": \"$REF\", \"inputs\": {\"before\":\"${BEFORE}\", \"after\": \"${AFTER}\"}}"
-          response=$(curl -X POST "https://api.github.com/repos/${{ github.repository }}/.github/workflows/${workflow_file}/dispatches" \
+          response=$(curl -X POST "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${workflow_file}/dispatches" \
             -H "Authorization: Bearer $repo_token" \
             -H "Accept: application/vnd.github.v3+json" \
             -d "$payload")
