@@ -59,12 +59,8 @@ jobs:
           before: ${{ github.event.before }}
         id: base-runtime
 
-      - name: show detect output
-        if: true
-        run: echo ${{ toJSON(steps.base-runtime.outputs) }}
-
       - name: Trigger dispatched
-        if: steps.base-runtime.outputs.changed
+        if: steps.base-runtime.outputs.changed == "true"
         uses: ./.github/actions/dispatch
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
