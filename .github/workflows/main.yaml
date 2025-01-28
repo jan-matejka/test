@@ -65,6 +65,22 @@ jobs:
 #            -d "$payload")
 #          echo "$response"
 
+  build-x:
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo foo
+
+  run-x:
+    if: ${{ ! failure() }}
+    needs:
+      - build-x
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo ${{ steps.build-x.conclusion }}
+          echo ${{ steps.build-x.outcome }}
+
 # jobs:
 #   analyze:
 #     runs-on: ubuntu-latest
