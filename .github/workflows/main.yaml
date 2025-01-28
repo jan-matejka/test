@@ -48,11 +48,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           workflow: called.yaml
-          inputs: |
-            {
-            "before": "${{ github.event.before }}",
-            "after": "${{ github.event.after }}",
-            }
+          before: ${{ github.event.before }}
+          after: ${{ github.event.after}}
 
 #      - name: Trigger Reusable Workflow
 #        id: trigger
