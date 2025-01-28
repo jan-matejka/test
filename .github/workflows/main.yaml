@@ -18,19 +18,20 @@ jobs:
           BEFORE: ${{ github.event.before }}
           AFTER: ${{ github.event.after }}
         uses: actions/github-script@v7
-        run: |
-          const owner, repo = context.repo();
-          x = await github.rest.actions.createWorkflowDispatch({
-            owner,
-            repo,
-            "called.yaml",
-            context.ref,
-            {
-              "before": context.payload.event.before,
-              "after": context.payload.event.after
-            },
-          });
-          return x;
+        with:
+          script: |
+            const owner, repo = context.repo();
+            x = await github.rest.actions.createWorkflowDispatch({
+              owner,
+              repo,
+              "called.yaml",
+              context.ref,
+              {
+                "before": context.payload.event.before,
+                "after": context.payload.event.after
+              },
+            });
+            return x;
         id: reusable-js
 
   call-sh:
