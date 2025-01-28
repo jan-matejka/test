@@ -4,4 +4,3 @@ FROM ${registry}/test_base-debian:${tag}
 # Base debian image
 
 RUN echo "base-runtime-1" >> /mark
-

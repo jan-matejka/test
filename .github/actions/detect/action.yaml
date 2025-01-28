@@ -11,6 +11,9 @@ inputs:
   before:
     required: true
     description: before sha
+  is_forced:
+    required: true
+    description: github.event.forced
 
 outputs:
   tag:
@@ -18,40 +21,30 @@ outputs:
     value: ${{ steps.tag.outputs.tag }}
   changed:
     description:
-    value: ${{ steps.changes-push.outputs.any_changed }}
+    value: ${{ steps.tag.outputs.changed }}
 
 runs:
   using: "composite"
   steps:
     - id: changes-push
+      if: inputs.is_forced == "false"
       uses: tj-actions/changed-files@v45
       with:
         files: ${{ inputs.paths }}
-        base_sha: ${{ inputs.before }}
 
     - id: changes-branch
-      if: ${{ ! steps.changes-push.outputs.any_changed }}
+      if: inputs.is_forced == "false" && ! steps.changes-push.outputs.any_changed
       uses: tj-actions/changed-files@v45
       with:
         files: ${{ inputs.paths }}
-        base_sha: ${{ github.event.repository.default_branch }}
 
     - id: tag
       if: ${{ ! failure() }}
       env:
         sha: ${{ github.sha }}
+        is_forced: ${{ inputs.is_forced }}
         push_changed: ${{ steps.changes-push.outputs.any_changed }}
         branch_changed: ${{ steps.changes-branch.outputs.any_changed }}
         default: ${{ github.event.repository.default_branch }}
-      run: |
-        printf "tag=" >> "${GITHUB_OUTPUT}"
-        ${push_changed} && {
-          echo "$sha" >> "${GITHUB_OUTPUT}"
-        } || {
-          ${branch_changed} && {
-            echo "$branch_tag" >> "${GITHUB_OUTPUT}"
-          } || {
-            echo "$default" >> "${GITHUB_OUTPUT}"
-          }
-        }
+      run: .github/determine-tag.sh >> "${GITHUB_OUTPUT}"
       shell: sh

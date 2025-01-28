@@ -52,15 +52,24 @@ jobs:
           echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_ENV}"
           echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
 
+      - env:
+          x: ${{ toJSON(github) }}
+        run: echo "$x"
+
       - uses: ./.github/actions/detect
         with:
           paths: container/base-runtime-1/**
           branch_tag: ${{ env.branch_tag }}
           before: ${{ github.event.before }}
+          is_forced: ${{ github.event.forced }}
         id: base-runtime
 
+      - env:
+          x: ${{ toJSON(steps.base-runtime.outputs) }}
+        run: echo "$x"
+
       - name: Trigger dispatched
-        if: steps.base-runtime.outputs.changed == "true"
+        if: fromJSON(steps.base-runtime.outputs.changed)
         uses: ./.github/actions/dispatch
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
