@@ -1,4 +1,4 @@
-name: called
+name: Foo bar whatever
 
 on:
   workflow_dispatch:
