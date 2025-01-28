@@ -14,7 +14,8 @@ jobs:
   my_job:
     runs-on: ubuntu-latest
     steps:
-      - run: true
+      - run: |
+        echo "name=status::success" >> $GITHUB_OUTPUTS
 
   dump_contexts_to_log:
     runs-on: ubuntu-latest
