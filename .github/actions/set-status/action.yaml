@@ -32,4 +32,3 @@ runs:
               github.run_id
             )) }},
             "context": ${{ toJSON(github.workflow) }} }'
-
