@@ -11,7 +11,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-      env:
+    - env:
         ref: ${{ toJSON(github.ref) }}
         before: ${{ toJSON(github.event.before) }}
         after: ${{ toJSON(github.event.after) }}
@@ -19,6 +19,7 @@ runs:
       shell: sh
       run: |
         printf "$tpl" "$ref" "$before" "$after" >> "$GITHUB_ENV"
+
     - env:
         repo: ${{ github.repository }}
         token: ${{ inputs.token }}
