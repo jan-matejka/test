@@ -27,8 +27,8 @@ jobs:
               "called.yaml",
               context.ref,
               {
-                "before": context.payload.event.before,
-                "after": context.payload.event.after
+                before: context.payload.event.before,
+                after: context.payload.event.after,
               },
             });
             return x;
