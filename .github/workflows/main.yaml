@@ -42,14 +42,14 @@ jobs:
           BEFORE: ${{ github.event.before }}
           AFTER: ${{ github.event.after }}
         run: |
--          repo_token="${{ secrets.GITHUB_TOKEN }}"
--          workflow_file="called.yaml"
--          payload="{\"ref\": \"$REF\", \"inputs\": {\"before\":\"${BEFORE}\", \"after\": \"${AFTER}\"}}"
--          response=$(curl -X POST "https://api.github.com/repos/${{ github.repository }}/.github/workflows/${workflow_file}/dispatches" \
--            -H "Authorization: Bearer $repo_token" \
--            -H "Accept: application/vnd.github.v3+json" \
--            -d "$payload")
--          echo "$response"
+          repo_token="${{ secrets.GITHUB_TOKEN }}"
+          workflow_file="called.yaml"
+          payload="{\"ref\": \"$REF\", \"inputs\": {\"before\":\"${BEFORE}\", \"after\": \"${AFTER}\"}}"
+          response=$(curl -X POST "https://api.github.com/repos/${{ github.repository }}/.github/workflows/${workflow_file}/dispatches" \
+            -H "Authorization: Bearer $repo_token" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "$payload")
+          echo "$response"
 
 
 # jobs:
