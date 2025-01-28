@@ -22,11 +22,11 @@ jobs:
           script: |
             const [owner, repo] = context.repo();
             x = github.rest.actions.createWorkflowDispatch({
-              owner,
-              repo,
-              "called.yaml",
-              context.ref,
-              {
+              owner: owner,
+              repo: repo,
+              workflow_id: "called.yaml",
+              ref: context.ref,
+              inputs: {
                 before: context.payload.event.before,
                 after: context.payload.event.after,
               },
