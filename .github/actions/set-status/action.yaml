@@ -8,6 +8,9 @@ inputs:
     required: true
     description: success | pending | failure | error
 
+defaults:
+  shell: sh
+
 runs:
   using: "composite"
   steps:
