@@ -24,7 +24,7 @@ runs:
           https://api.github.com/repos/$repo/statuses/$sha \
           -d '{"state": ${{ toJSON(inputs.status) }}, \
             "target_url": ${{ toJSON(format(
-              "{0}/{1}/actions/runs/{2}",
+              '{0}/{1}/actions/runs/{2}',
               github.server_url,
               github.repository,
               github.run_id
