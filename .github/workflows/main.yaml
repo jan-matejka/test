@@ -61,7 +61,6 @@ jobs:
           paths: container/base-runtime-1/**
           branch_tag: ${{ env.branch_tag }}
           before: ${{ github.event.before }}
-          # ^ this doesn't work on force push
         id: base-runtime
 
       - env:

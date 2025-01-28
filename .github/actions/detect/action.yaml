@@ -27,14 +27,13 @@ runs:
       uses: tj-actions/changed-files@v45
       with:
         files: ${{ inputs.paths }}
-        base_sha: ${{ inputs.before }}
+
 
     - id: changes-branch
       if: ${{ ! steps.changes-push.outputs.any_changed }}
       uses: tj-actions/changed-files@v45
       with:
         files: ${{ inputs.paths }}
-        base_sha: ${{ github.event.repository.default_branch }}
 
     - id: tag
       if: ${{ ! failure() }}
