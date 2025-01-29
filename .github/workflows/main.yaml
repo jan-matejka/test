@@ -98,7 +98,8 @@ jobs:
       - run: echo foo
 
   run-x:
-    if: ${{ ! failure() }}
+    # if: ${{ ! failure() }}
+    if: false
     needs:
       - build-x
     runs-on: ubuntu-latest
