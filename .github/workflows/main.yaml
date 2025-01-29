@@ -61,6 +61,7 @@ jobs:
           paths: container/base-runtime-1/**
           branch_tag: ${{ env.branch_tag }}
           before: ${{ github.event.before }}
+          is_forced: ${{ github.event.forced }}
         id: base-runtime
 
       - env:
