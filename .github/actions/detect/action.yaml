@@ -27,13 +27,13 @@ runs:
   using: "composite"
   steps:
     - id: changes-push
-      if: inputs.is_forced == "false"
+      if: inputs.is_forced == 'false'
       uses: tj-actions/changed-files@v45
       with:
         files: ${{ inputs.paths }}
 
     - id: changes-branch
-      if: inputs.is_forced == "false" && ! steps.changes-push.outputs.any_changed
+      if: inputs.is_forced == 'false' && ! steps.changes-push.outputs.any_changed
       uses: tj-actions/changed-files@v45
       with:
         files: ${{ inputs.paths }}
