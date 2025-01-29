@@ -46,5 +46,5 @@ runs:
         push_changed: ${{ steps.changes-push.outputs.any_changed }}
         branch_changed: ${{ steps.changes-branch.outputs.any_changed }}
         default: ${{ github.event.repository.default_branch }}
-      run: .github/determine-tag.sh >> "${GITHUB_OUTPUT}"
+      run: .github/determine-tag.sh | tee "${GITHUB_OUTPUT}"
       shell: sh
