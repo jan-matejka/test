@@ -1,10 +1,10 @@
 name: Runtime 1 - Badge
 
-on:
-  never
+on: pull_request
+  #never
   # workflow_run:
-    types: [completed]
-    workflows: "GHA Testing - Main Workflow"
+  #  types: [completed]
+  #  workflows: "GHA Testing - Main Workflow"
 
 jobs:
   on-success:

@@ -38,6 +38,9 @@ jobs:
 #        id: reusable-js
 
   call-sh:
+    env:
+      before: ${{ github.event.before }}
+      sha: ${{ github.sha }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -52,16 +55,22 @@ jobs:
           echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_ENV}"
           echo "branch_tag=$ref_name" | sed 's#/#__#g' >> "${GITHUB_OUTPUT}"
 
+      - name: find proper before if forced
+        if: github.event.forced
+        run: |
+          git fetch origin "$before"
+          base=$(git merge-base "$before" "$sha") || exit 1
+          printf "before=%s" $base >> $GITHUB_ENV
+
       - env:
           x: ${{ toJSON(github) }}
-        run: echo "$x"
+        run: echo "$x"; echo "$inputs"
 
       - uses: ./.github/actions/detect
         with:
-          paths: container/base-runtime-1/**
+          path: container/base-runtime-1/**
           branch_tag: ${{ env.branch_tag }}
-          before: ${{ github.event.before }}
-          is_forced: ${{ github.event.forced }}
+          before: ${{ env.before }}
         id: base-runtime
 
       - env:
@@ -98,7 +107,8 @@ jobs:
       - run: echo foo
 
   run-x:
-    if: ${{ ! failure() }}
+    # if: ${{ ! failure() }}
+    if: false
     needs:
       - build-x
     runs-on: ubuntu-latest
