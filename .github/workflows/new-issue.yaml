@@ -1,0 +1,20 @@
+name: set default fields
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1
+        env:
+          github: ${{ toJSON(github) }}
+        run: echo "${github}"
+
+      - name: 2
+        env:
+          env: ${{ toJSON(env) }}
+        run: echo "${env}"
