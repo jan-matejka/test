@@ -1,0 +1,15 @@
+name: edited issue
+
+on:
+  issues:
+    types: [edited]
+
+jobs:
+  info:
+    name: Show info
+    runs-on: ubuntu-latest
+    steps:
+      - name: github
+        env:
+          github: ${{ toJSON(github) }}
+        run: echo "$env"
