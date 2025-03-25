@@ -2,19 +2,19 @@ name: set default fields
 
 on:
   issues:
-    types:
-      - opened
+    types: [opened, reopened, transferred]
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
-  info:
+  add-to-project:
+    name: Add issue to project
     runs-on: ubuntu-latest
     steps:
-      - name: 1
-        env:
-          github: ${{ toJSON(github) }}
-        run: echo "${github}"
-
-      - name: 2
-        env:
-          env: ${{ toJSON(env) }}
-        run: echo "${env}"
+      - uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e
+        # ^ v1.0.2
+        with:
+          # You can target a project in a different organization
+          # to the issue
+          project-url: https://github.com/users/jan-matejka/projects/7
+          github-token: ${{ secrets.GITHUB_TOKEN }}
